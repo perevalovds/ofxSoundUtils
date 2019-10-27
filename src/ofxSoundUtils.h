@@ -11,6 +11,7 @@ struct ofxSoundUtils {
 
 	//x - amplitude, y - velocity of amplitude
 	static ofPoint get_sound_amp_vel(vector<float> &sound, int i);
+	static ofPoint get_sound_amp_vel(float *sound, int i, int n);
 
 	//interpolated
 	static float interpolate_stereo(vector<float> &sound_stereo, float pos, int channel);

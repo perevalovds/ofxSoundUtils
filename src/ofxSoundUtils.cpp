@@ -102,6 +102,14 @@ ofPoint ofxSoundUtils::get_sound_amp_vel(vector<float> &sound, int i) {
 		return ofPoint();
 	}
 	return ofPoint(sound[i], sound[i] - sound[i - 1]);
+}
+
+//--------------------------------------------------------------------------------
+ofPoint ofxSoundUtils::get_sound_amp_vel(float *sound, int i, int n) {
+	if (i < 1 || i >= n - 1) {
+		return ofPoint();
+	}
+	return ofPoint(sound[i], sound[i] - sound[i - 1]);
 
 }
 
