@@ -142,6 +142,27 @@ vector<float> ofxSoundUtils::mu_law(vector<float> &sound_mono, float mu) {
 }
 
 //--------------------------------------------------------------------------------
+vector<float> ofxSoundUtils::mu_law_decode(vector<float> &sound_mu_mono, float mu) {
+	//y = sign(x)*log(1+mu|x|)/log(1+mu),
+	//sign(x) = sign(y),
+	//|y| = log(1+mu|x|)/log(1+mu),
+	//log(1+mu|x|) = |y|*log(1+mu),
+	//1+mu|x| = exp(|y|*log(1+mu))
+	//|x| = (exp(|y|*log(1+mu))-1) / mu
+	int n = sound_mu_mono.size();
+	vector<float> data(n);
+
+	for (int i = 0; i < n; i++) {
+		float y = ofClamp(sound_mu_mono[i], -1, 1);
+		data[i] = ofSign(y) * (exp(fabs(y)*log(1 + mu)) - 1) / mu;
+		//cout << int(data[i]) << " ";
+	}
+
+	return data;
+}
+
+
+//--------------------------------------------------------------------------------
 vector<unsigned char> ofxSoundUtils::mu_law8(vector<float> &sound_mono, float mu) {
 	int n = sound_mono.size();
 	vector<unsigned char> data(n);

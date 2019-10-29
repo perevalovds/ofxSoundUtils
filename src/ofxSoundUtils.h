@@ -19,6 +19,8 @@ struct ofxSoundUtils {
 	//mu_law coding (log extension), based on formula in an article about WaveNet
 	static vector<float> mu_law(vector<float> &sound_mono, float mu = 255);
 	static vector<unsigned char> mu_law8(vector<float> &sound_mono, float mu = 255);
+	//mu_law decoding 
+	static vector<float> mu_law_decode(vector<float> &sound_mu_mono, float mu = 255);
 
 
 	//from ofxKuFiles:
