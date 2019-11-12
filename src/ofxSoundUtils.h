@@ -27,5 +27,55 @@ struct ofxSoundUtils {
 	static bool file_exists(string fileName, bool use_data_path = true);
 	static int file_size(string fileName, bool use_data_path = true);
 	
+	//getting RMS
+	static float get_RMS(vector<float> &sound);
+
+	//if RMS exceeds value, limit it
+	static void limit_RMS(vector<float> &sound, float max_rms);
+
+};
+
+
+//Filter: lo-pass, hi-pass, band-pass
+//works sample-by-sample
+// By Paul Kellett
+// http://www.musicdsp.org/showone.php?id=29
+// http://www.martin-finke.de/blog/articles/audio-plugins-013-filter/
+
+struct ofxSoundUtilsFilter {
+
+	static const int FILTER_MODE_BYPASS = 0;
+	static const int FILTER_MODE_LOWPASS = 1;
+	static const int FILTER_MODE_HIGHPASS = 2;
+	static const int FILTER_MODE_BANDPASS = 3;
+
+	void process_resetted(vector<float> &sound, float cutoff, int mode) {
+		buf0 = 0;
+		buf1 = 0;
+		for (int i = 0; i < sound.size(); i++) {
+			sound[i] = process(sound[i], cutoff, mode);
+		}
+	}
+
+	float process(float inputValue, float cutoff, int mode) {
+		buf0 += cutoff * (inputValue - buf0);
+		buf1 += cutoff * (buf0 - buf1);
+		switch (mode) {
+		case FILTER_MODE_BYPASS:
+			return inputValue;
+		case FILTER_MODE_LOWPASS:
+			return buf1;
+		case FILTER_MODE_HIGHPASS:
+			return inputValue - buf0;
+		case FILTER_MODE_BANDPASS:
+			return buf0 - buf1;
+		default:
+			return 0.0;
+		}
+	}
+
+	float buf0 = 0;
+	float buf1 = 0;
+
 };
 

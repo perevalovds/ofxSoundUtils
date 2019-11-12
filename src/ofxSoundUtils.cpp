@@ -177,5 +177,38 @@ vector<unsigned char> ofxSoundUtils::mu_law8(vector<float> &sound_mono, float mu
 	return data;
 }
 
+//--------------------------------------------------------------------------------
+//getting RMS
+float ofxSoundUtils::get_RMS(vector<float> &sound) {
+	double vol = 0.0;
+
+	int num = 0;
+	//lets go through each sample and calculate the root mean square which is a rough way to calculate volume	
+	for (size_t i = 0; i < sound.size(); i++) {
+		float v = sound[i];
+		vol += v*v;
+		num++;
+	}
+
+	if (num > 0) {
+		vol /= num;
+	}
+
+	vol = sqrt(vol);
+	return vol;
+}
+
+
+//--------------------------------------------------------------------------------
+//if RMS exceeds value, limit it
+void ofxSoundUtils::limit_RMS(vector<float> &sound, float max_rms) {
+	float vol = get_RMS(sound);
+	if (vol > max_rms) {
+		float mul = (vol > 0) ? max_rms / vol : 0;
+		for (int i = 0; i < sound.size(); i++) {
+			sound[i] *= mul;
+		}
+	}
+}
 
 //--------------------------------------------------------------------------------
