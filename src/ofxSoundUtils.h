@@ -33,6 +33,9 @@ struct ofxSoundUtils {
 	//if RMS exceeds value, limit it
 	static void limit_RMS(vector<float> &sound, float max_rms);
 
+	//linear to exponential volume, 0..1
+	//https://www.dr-lex.be/info-stuff/volumecontrols.html
+	static float volume_linear_to_exp(float v);
 };
 
 
@@ -46,8 +49,8 @@ struct ofxSoundUtilsFilter {
 
 	static const int FILTER_MODE_BYPASS = 0;
 	static const int FILTER_MODE_LOWPASS = 1;
-	static const int FILTER_MODE_HIGHPASS = 2;
-	static const int FILTER_MODE_BANDPASS = 3;
+	static const int FILTER_MODE_BANDPASS = 2;
+	static const int FILTER_MODE_HIGHPASS = 3;
 
 	void process_resetted(vector<float> &sound, float cutoff, int mode) {
 		buf0 = 0;

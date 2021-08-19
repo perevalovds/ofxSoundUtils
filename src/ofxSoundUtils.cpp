@@ -212,3 +212,11 @@ void ofxSoundUtils::limit_RMS(vector<float> &sound, float max_rms) {
 }
 
 //--------------------------------------------------------------------------------
+//linear to exponential volume, 0..1
+//https://www.dr-lex.be/info-stuff/volumecontrols.html
+float ofxSoundUtils::volume_linear_to_exp(float v) {
+	v = ofClamp(v, 0, 1);
+	return exp(6.908*v) / 1000;
+}
+
+//--------------------------------------------------------------------------------
