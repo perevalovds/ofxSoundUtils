@@ -220,3 +220,57 @@ float ofxSoundUtils::volume_linear_to_exp(float v) {
 }
 
 //--------------------------------------------------------------------------------
+void ofxSoundUtilsDelayStereo::setup(int sample_rate, float buffer_length_sec) {
+	sample_rate_ = sample_rate;
+	n_ = int(buffer_length_sec * sample_rate_);
+
+	time_delay_ = 1;
+	feedback_ = 0.05;
+	cross_ = 0;
+
+	bufferL_.resize(n_);
+	bufferR_.resize(n_);
+	for (int i = 0; i < n_; i++) {
+		bufferL_[i] = bufferR_[i] = 0;
+	}
+	pos_ = 0;
+
+}
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtilsDelayStereo::set_volume(float vol) {
+	vol_ = vol;
+}
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtilsDelayStereo::set_delay_time(float time_sec) {
+	time_delay_ = int(time_sec * sample_rate_);
+}
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtilsDelayStereo::set_feedback(float feedback) {
+	feedback_ = feedback;
+}
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtilsDelayStereo::set_cross_stereo(float cross) {
+	cross_ = cross;
+}
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtilsDelayStereo::process_add(float inputL, float inputR, float &outputL, float &outputR) {
+	pos_ %= n_;
+	int wr = (pos_ + time_delay_) % n_;
+	float &L = bufferL_[pos_];
+	float &R = bufferR_[pos_];
+	outputL += L * vol_; 
+	outputR += R * vol_; 
+
+	bufferL_[wr] = inputL + feedback_ * (L * (1 - cross_) + R * cross_);
+	bufferR_[wr] = inputR + feedback_ * (L * cross_ + R * (1 - cross_));
+
+	pos_++;
+
+}
+
+//--------------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 #pragma once
 
 //Sound utils
+//- Load/save raw PCM
+//- Low,high,band-pass filters
+//- Delay effect
 
 #include "ofMain.h"
 
@@ -80,5 +83,26 @@ struct ofxSoundUtilsFilter {
 	float buf0 = 0;
 	float buf1 = 0;
 
+};
+
+
+//Delay effect
+struct ofxSoundUtilsDelayStereo {
+	void setup(int sample_rate, float buffer_length_sec);
+	void set_volume(float vol);
+	void set_delay_time(float time_sec);
+	void set_feedback(float feedback);
+	void set_cross_stereo(float cross);
+	void process_add(float inputL, float inputR, float &outputL, float &outputR);
+protected:
+	int sample_rate_ = 44100;
+	int n_ = 0;
+	float vol_ = 0.1;
+	int time_delay_ = 100;
+	float feedback_ = 0.05;
+	float cross_ = 0;
+
+	vector<float> bufferL_, bufferR_;
+	int pos_ = 0;
 };
 
