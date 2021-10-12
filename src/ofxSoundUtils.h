@@ -12,6 +12,8 @@ struct ofxSoundUtils {
 	static void save_sound_raw_mono16(vector<float> &sound, string file_name);
 	static void save_sound_raw_stereo16_split(vector<float> &sound_stereo, string file_nameL, string file_nameR);
 
+	static void save_sound_wav_stereo16(vector<short> &samples, int samples_count, string file_name);
+
 	//x - amplitude, y - velocity of amplitude
 	static ofPoint get_sound_amp_vel(vector<float> &sound, int i);
 	static ofPoint get_sound_amp_vel(float *sound, int i, int n);

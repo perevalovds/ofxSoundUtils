@@ -1,5 +1,8 @@
 #include "ofxSoundUtils.h"
 
+#define DR_WAV_IMPLEMENTATION
+#include "dr_wav.h"
+
 //--------------------------------------------------------------------------------
 bool ofxSoundUtils::file_exists(string fileName, bool use_data_path)
 {
@@ -95,6 +98,26 @@ void ofxSoundUtils::save_sound_raw_stereo16_split(vector<float> &sound_stereo, s
 	save_sound_raw_mono16(soundL, file_nameL);
 	save_sound_raw_mono16(soundR, file_nameR);
 }
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtils::save_sound_wav_stereo16(vector<short> &samples, int samples_count, string file_name) {
+	drwav_data_format format;
+	format.container = drwav_container_riff;     // <-- drwav_container_riff = normal WAV files, drwav_container_w64 = Sony Wave64.
+	format.format = DR_WAVE_FORMAT_PCM;          // <-- Any of the DR_WAVE_FORMAT_* codes.
+	format.channels = 2;
+	format.sampleRate = 44100;
+	format.bitsPerSample = 16;
+
+	drwav wavfile;
+	drwav_init_file_write(&wavfile, file_name.c_str(), &format, NULL);
+
+	int frame_count = samples_count / 2;
+	drwav_uint64 framesWritten = drwav_write_pcm_frames(&wavfile, frame_count, samples.data());
+
+	drwav_uninit(&wavfile);
+	cout << "WAV saved to " << file_name << endl;
+}
+
 
 //--------------------------------------------------------------------------------
 ofPoint ofxSoundUtils::get_sound_amp_vel(vector<float> &sound, int i) {
