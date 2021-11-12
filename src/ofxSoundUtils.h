@@ -49,6 +49,8 @@ struct ofxSoundUtils {
 // By Paul Kellett
 // http://www.musicdsp.org/showone.php?id=29
 // http://www.martin-finke.de/blog/articles/audio-plugins-013-filter/
+// Lowpass-resonance filter from LowPassFilter.h, created by Marek Bereza on 11/08/2013.
+
 
 struct ofxSoundUtilsFilter {
 
@@ -56,34 +58,77 @@ struct ofxSoundUtilsFilter {
 	static const int FILTER_MODE_LOWPASS = 1;
 	static const int FILTER_MODE_BANDPASS = 2;
 	static const int FILTER_MODE_HIGHPASS = 3;
+	static const int FILTER_MODE_LOWPASS_RESO = 4;
 
 	void process_resetted(vector<float> &sound, float cutoff, int mode) {
 		buf0 = 0;
 		buf1 = 0;
+
+		x = y = r = c = 0;
+		set_params_lopass_reso(cutoff, resonance);
+
+
 		for (int i = 0; i < sound.size(); i++) {
 			sound[i] = process(sound[i], cutoff, mode);
 		}
 	}
 
+	void set_params_lopass_reso(float cut_hz, float reso, float sample_rat = 44100) {
+		cutoff = cut_hz;
+		resonance = reso;
+		sample_rate = sample_rat;
+
+		if (cutoff < 50) cutoff = 50;
+		if (cutoff > sample_rate/2) cutoff = sample_rate/2;
+		float z = cos(TWO_PI / sample_rate * cutoff);
+		c = 2 - 2 * z;
+		float zzz = z - 1;
+		zzz = zzz * zzz * zzz;
+		r = (sqrt(2) * sqrt(-zzz) + resonance * (z - 1)) / (resonance * (z - 1));
+	}
+
+	//cutoff used except FILTER_MODE_LOWPASS_RESO
 	float process(float inputValue, float cutoff, int mode) {
-		buf0 += cutoff * (inputValue - buf0);
-		buf1 += cutoff * (buf0 - buf1);
 		switch (mode) {
 		case FILTER_MODE_BYPASS:
+			buf0 += cutoff * (inputValue - buf0);
+			buf1 += cutoff * (buf0 - buf1);
 			return inputValue;
 		case FILTER_MODE_LOWPASS:
+			buf0 += cutoff * (inputValue - buf0);
+			buf1 += cutoff * (buf0 - buf1);
 			return buf1;
 		case FILTER_MODE_HIGHPASS:
+			buf0 += cutoff * (inputValue - buf0);
+			buf1 += cutoff * (buf0 - buf1);
 			return inputValue - buf0;
 		case FILTER_MODE_BANDPASS:
+			buf0 += cutoff * (inputValue - buf0);
+			buf1 += cutoff * (buf0 - buf1);
 			return buf0 - buf1;
+		case FILTER_MODE_LOWPASS_RESO:
+		{
+			x += (inputValue - y) * c;
+			y += x;
+			x *= r;
+			return x;
+		}
 		default:
 			return 0.0;
 		}
 	}
 
+
 	float buf0 = 0;
 	float buf1 = 0;
+
+	float cutoff = 0;
+	float resonance = 0;
+	float sample_rate = 44100;
+	float x = 0;
+	float y = 0;
+	float r = 0;
+	float c = 0;
 
 };
 
