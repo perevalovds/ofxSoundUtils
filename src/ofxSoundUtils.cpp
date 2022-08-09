@@ -1,6 +1,19 @@
 #include "ofxSoundUtils.h"
 
 //--------------------------------------------------------------------------------
+int ofxSoundUtils::ms_to_samples(float ms, int sample_rate)
+{
+	return int(ms * sample_rate);
+}
+
+//--------------------------------------------------------------------------------
+float ofxSoundUtils::sample_rate_to_phase_shift(int sample_rate)
+{
+	if (sample_rate <= 0) return 0;
+	return 1.0f / sample_rate;
+}
+
+//--------------------------------------------------------------------------------
 bool ofxSoundUtils::file_exists(string fileName, bool use_data_path)
 {
 	if (use_data_path) fileName = ofToDataPath(fileName);

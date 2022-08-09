@@ -8,6 +8,9 @@
 #include "ofMain.h"
 
 struct ofxSoundUtils {
+	static int ms_to_samples(float ms, int sample_rate);
+	static int sample_rate_to_phase_shift(int sample_rate);
+
 	static vector<float> load_sound_raw_mono16(string file_name);
 	static void save_sound_raw_mono16(vector<float> &sound, string file_name);
 	static void save_sound_raw_stereo16_split(vector<float> &sound_stereo, string file_nameL, string file_nameR);
