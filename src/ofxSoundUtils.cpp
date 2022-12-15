@@ -224,12 +224,34 @@ void ofxSoundUtils::limit_RMS(vector<float> &sound, float max_rms) {
 	}
 }
 
-//--------------------------------------------------------------------------------
-//linear to exponential volume, 0..1
-//https://www.dr-lex.be/info-stuff/volumecontrols.html
-float ofxSoundUtils::volume_linear_to_exp(float v) {
-	v = ofClamp(v, 0, 1);
-	return exp(6.908*v) / 1000;
+//--------------------------------------------------------------
+// https://hydrogenaud.io/index.php?topic=86414.0
+// db = 20*log10(amplitude)
+//      6.02 * log2(Amplitude)
+//amplitude = pow(2, dB/6.02), or pow(10, dB/20)
+float ofxSoundUtils::db_to_amp(float db)
+{
+	return pow(10.0f, db / 20.0f);
+}
+
+//--------------------------------------------------------------
+// https://newt.phys.unsw.edu.au/jw/notes.html
+// 69 is A, 440Hz, m=0..127
+// m = 12*log2(fm/440 Hz) + 69 and fm = 2^((m-69)/12) * (440 Hz).
+
+//Convert midi note to frequency, note 0..127
+int ofxSoundUtils::note_to_hz_int(int midi_note) {
+	return note_to_hz_float(midi_note);
+}
+
+//float version
+float ofxSoundUtils::note_to_hz_float(float midi_note) {
+	return pow(2.f, (midi_note - 69.f) / 12.f) * 440.f; //Hz
+	//note: for midi_note>100 sometimes occurs overflow
+}
+
+int ofxSoundUtils::hz_to_note(float hz) {
+	return 12.f * log2f(hz / 440.f) + 69;
 }
 
 //--------------------------------------------------------------------------------

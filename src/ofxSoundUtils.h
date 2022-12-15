@@ -1,6 +1,7 @@
 #pragma once
 
 //Sound utils
+//- Conversions notes to Hz, Db to amp, mu law encoding
 //- Load/save raw PCM
 //- Low,high,band-pass filters
 //- Delay effect
@@ -8,6 +9,18 @@
 #include "ofMain.h"
 
 struct ofxSoundUtils {
+	// Note - Hz conversion
+	//Convert midi note to frequency, note 0..127
+	static int note_to_hz_int(int midi_note);
+	static float note_to_hz_float(float midi_note);
+
+	static int hz_to_note(float hz);
+
+	// Db - amp conversions
+	// db <= 0, for example -40..0
+	static float db_to_amp(float db);
+
+	// Time - samples conversion
 	static int ms_to_samples(float ms, int sample_rate);
 	static float sample_rate_to_phase_shift(int sample_rate);
 
@@ -16,34 +29,31 @@ struct ofxSoundUtils {
 	static void save_sound_raw_stereo16_split(vector<float> &sound_stereo, string file_nameL, string file_nameR);
 	//to save WAVs see my fork of ofxAudioFile: https://github.com/perevalovds/ofxAudioFile.git
 
-
+	// Compute momentary velocity
 	//x - amplitude, y - velocity of amplitude
 	static ofPoint get_sound_amp_vel(vector<float> &sound, int i);
 	static ofPoint get_sound_amp_vel(float *sound, int i, int n);
 
-	//interpolated
+	// Interpolation
 	static float interpolate_stereo(vector<float> &sound_stereo, float pos, int channel);
 
-	//mu_law coding (log extension), based on formula in an article about WaveNet
+	// mu_law 
+	// Coding (log extension), based on formula in an article about WaveNet
 	static vector<float> mu_law(vector<float> &sound_mono, float mu = 255);
 	static vector<unsigned char> mu_law8(vector<float> &sound_mono, float mu = 255);
-	//mu_law decoding 
+	// Decoding 
 	static vector<float> mu_law_decode(vector<float> &sound_mu_mono, float mu = 255);
 
 
-	//from ofxKuFiles:
+	// Files (from ofxKuFiles)
 	static bool file_exists(string fileName, bool use_data_path = true);
 	static int file_size(string fileName, bool use_data_path = true);
 	
-	//getting RMS
+	// RMS
 	static float get_RMS(vector<float> &sound);
 
 	//if RMS exceeds value, limit it
 	static void limit_RMS(vector<float> &sound, float max_rms);
-
-	//linear to exponential volume, 0..1
-	//https://www.dr-lex.be/info-stuff/volumecontrols.html
-	static float volume_linear_to_exp(float v);
 };
 
 
