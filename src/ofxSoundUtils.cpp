@@ -250,7 +250,7 @@ float ofxSoundUtils::note_to_hz_float(float midi_note) {
 	//note: for midi_note>100 sometimes occurs overflow
 }
 
-int ofxSoundUtils::hz_to_note(float hz) {
+float ofxSoundUtils::hz_to_note(float hz) {
 	return 12.f * log2f(hz / 440.f) + 69;
 }
 

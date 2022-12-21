@@ -14,7 +14,7 @@ struct ofxSoundUtils {
 	static int note_to_hz_int(int midi_note);
 	static float note_to_hz_float(float midi_note);
 
-	static int hz_to_note(float hz);
+	static float hz_to_note(float hz);
 
 	// Db - amp conversions
 	// db <= 0, for example -40..0
