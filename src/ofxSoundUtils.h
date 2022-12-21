@@ -6,9 +6,24 @@
 //- Low,high,band-pass filters
 //- Delay effect
 
+// For shorted typing, use "typedef"
+// #include "ofxSoundUtils.h"
+// typedef ofxSoundUtils util;
+// ... util::note_to_hz_float(v) ...
+
+
 #include "ofMain.h"
 
 struct ofxSoundUtils {
+	// Math
+	static int absi(int i);
+	static int clampi(int i, int a, int b);
+	static int clampf(float x, float a, float b);
+	static float mapi(int x, int a, int b, int A, int B);
+	static int mapi_clamp(int i, int a, int b, int A, int B);
+	static float mapf(float x, float a, float b, float A, float B);
+	static float mapf_clamp(float x, float a, float b, float A, float B);
+
 	// Note - Hz conversion
 	//Convert midi note to frequency, note 0..127
 	static int note_to_hz_int(int midi_note);

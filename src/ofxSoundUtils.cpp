@@ -1,5 +1,41 @@
 #include "ofxSoundUtils.h"
 
+//---------------------------------------------------------------
+//abs function, Arduino's abs works not correct for me in some cases
+int ofxSoundUtils::absi(int i) {
+	return  (i >= 0) ? i : -i;
+}
+
+int ofxSoundUtils::clampi(int i, int a, int b) {
+	if (a > b) { int t = a; a = b; b = t; }
+	if (i < a) return a;
+	if (i > b) return b;
+	return i;
+}
+
+int ofxSoundUtils::clampf(float x, float a, float b) {
+	if (a > b) { float t = a; a = b; b = t; }
+	if (x < a) return a;
+	if (x > b) return b;
+	return x;
+}
+
+float ofxSoundUtils::mapi(int x, int a, int b, int A, int B) {
+	return (x - a) / (b - a) * (B - A) + A;
+}
+
+int ofxSoundUtils::mapi_clamp(int i, int a, int b, int A, int B) {
+	return clampi(mapi(i, a, b, A, B), A, B);
+}
+
+float ofxSoundUtils::mapf(float x, float a, float b, float A, float B) {
+	return (x - a) / (b - a) * (B - A) + A;
+}
+
+float ofxSoundUtils::mapf_clamp(float x, float a, float b, float A, float B) {
+	return clampf((x - a) / (b - a) * (B - A) + A, A, B);
+}
+
 //--------------------------------------------------------------------------------
 int ofxSoundUtils::ms_to_samples(float ms, int sample_rate)
 {
