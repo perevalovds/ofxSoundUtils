@@ -24,6 +24,10 @@ struct ofxSoundUtils {
 	static float mapf(float x, float a, float b, float A, float B);
 	static float mapf_clamp(float x, float a, float b, float A, float B);
 
+	// Generate random number
+	static int randomi(int a, int bincluded);
+	static float randomf(float a, float bexcluded);
+
 	// Note - Hz conversion
 	//Convert midi note to frequency, note 0..127
 	static int note_to_hz_int(int midi_note);

@@ -1,4 +1,5 @@
 #include "ofxSoundUtils.h"
+#include <random>
 
 //---------------------------------------------------------------
 //abs function, Arduino's abs works not correct for me in some cases
@@ -21,7 +22,7 @@ int ofxSoundUtils::clampf(float x, float a, float b) {
 }
 
 float ofxSoundUtils::mapi(int x, int a, int b, int A, int B) {
-	return (x - a) / (b - a) * (B - A) + A;
+	return (B - A) * (x - a) / (b - a) + A;
 }
 
 int ofxSoundUtils::mapi_clamp(int i, int a, int b, int A, int B) {
@@ -34,6 +35,22 @@ float ofxSoundUtils::mapf(float x, float a, float b, float A, float B) {
 
 float ofxSoundUtils::mapf_clamp(float x, float a, float b, float A, float B) {
 	return clampf((x - a) / (b - a) * (B - A) + A, A, B);
+}
+
+// https://stackoverflow.com/questions/288739/generate-random-numbers-uniformly-over-an-entire-range
+random_device  rand_dev_;
+mt19937 generator(rand_dev_());
+int ofxSoundUtils::randomi(int a, int bincluded)
+{
+	std::uniform_int_distribution<int> distr(a, bincluded);
+	return distr(generator);
+}
+
+float ofxSoundUtils::randomf(float a, float bexcluded)
+{
+	std::mt19937 generator(rand_dev_());
+	std::uniform_real_distribution<float> distr(a, bexcluded);
+	return distr(generator);
 }
 
 //--------------------------------------------------------------------------------
