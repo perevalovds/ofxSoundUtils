@@ -288,6 +288,13 @@ float ofxSoundUtils::db_to_amp(float db)
 }
 
 //--------------------------------------------------------------
+// Inversion of db_to_amp
+float ofxSoundUtils::amp_to_db(float amp)
+{
+	return log10f(amp) * 20.0f;
+}
+
+//--------------------------------------------------------------
 // https://newt.phys.unsw.edu.au/jw/notes.html
 // 69 is A, 440Hz, m=0..127
 // m = 12*log2(fm/440 Hz) + 69 and fm = 2^((m-69)/12) * (440 Hz).

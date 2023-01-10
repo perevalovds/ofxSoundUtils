@@ -38,6 +38,7 @@ struct ofxSoundUtils {
 	// Db - amp conversions
 	// db <= 0, for example -40..0
 	static float db_to_amp(float db);
+	static float amp_to_db(float amp);
 
 	// Time - samples conversion
 	static int ms_to_samples(float ms, int sample_rate);
