@@ -45,7 +45,9 @@ struct ofxSoundUtils {
 	static float sample_rate_to_phase_shift(int sample_rate);
 
 	static vector<float> load_sound_raw_mono16(string file_name);
-	static void save_sound_raw_mono16(vector<float> &sound, string file_name);
+	static void save_sound_raw_mono16(vector<int16_t>& sound, string file_name);
+	static void save_sound_raw_mono16(int8_t* sound, int n, string file_name);
+	static void save_sound_raw_mono16(vector<float> &sound, string file_name); // sound -1..1
 	static void save_sound_raw_stereo16_split(vector<float> &sound_stereo, string file_nameL, string file_nameR);
 	//to save WAVs see my fork of ofxAudioFile: https://github.com/perevalovds/ofxAudioFile.git
 

@@ -124,19 +124,14 @@ vector<float> ofxSoundUtils::load_sound_raw_mono16(string file_name) {
 }
 
 //--------------------------------------------------------------------------------
-void ofxSoundUtils::save_sound_raw_mono16(vector<float> &sound, string file_name) {
-	cout << "Saving " << file_name << endl;
-	typedef int16_t type;
-	int n = sound.size();
-
-	vector<type> data(n);
-	for (int i = 0; i < n; i++) {
-		data[i] = int(sound[i] * 32767);
-	}
-
-	FILE *file = fopen(ofToDataPath(file_name).c_str(), "wb");
+void ofxSoundUtils::save_sound_raw_mono16(vector<int16_t>& sound, string file_name)
+{
+	cout << "Saving raw sound to " << file_name << endl;
+	FILE* file = fopen(ofToDataPath(file_name).c_str(), "wb");
 	if (file) {
-		fwrite(&data[0], sizeof(type), n, file);
+		if (!sound.empty()) {
+			fwrite(&sound[0], sizeof(int16_t), sound.size(), file);
+		}
 		fclose(file);
 		return;
 	}
@@ -144,7 +139,28 @@ void ofxSoundUtils::save_sound_raw_mono16(vector<float> &sound, string file_name
 		cout << "Error writing file " << file_name << endl;
 		return;
 	}
+}
 
+//--------------------------------------------------------------------------------
+void ofxSoundUtils::save_sound_raw_mono16(int8_t* sound, int n, string file_name)
+{
+	typedef int16_t type;
+	vector<type> data(n);
+	for (int i = 0; i < n; i++) {
+		data[i] = int16_t(sound[i]) * 256;
+	}
+	save_sound_raw_mono16(data, file_name);
+}
+
+//--------------------------------------------------------------------------------
+void ofxSoundUtils::save_sound_raw_mono16(vector<float> &sound, string file_name) {
+	typedef int16_t type;
+	int n = sound.size();
+	vector<type> data(n);
+	for (int i = 0; i < n; i++) {
+		data[i] = int(sound[i] * 32767);
+	}
+	save_sound_raw_mono16(data, file_name);
 }
 
 //--------------------------------------------------------------------------------
